@@ -77,6 +77,9 @@ namespace Com_Takip
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            key.SetValue("Com_Takip", "\"" + Application.ExecutablePath + "\"");
+        
             this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - this.Width;
             this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height - this.Height;
 
