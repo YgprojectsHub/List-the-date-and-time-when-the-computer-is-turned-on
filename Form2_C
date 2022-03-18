@@ -1,0 +1,98 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+using Microsoft.Win32;
+
+namespace Com_Takip
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+        }
+
+        MySqlConnection sqlConn = new MySqlConnection();
+        MySqlCommand sqlcomm = new MySqlCommand();
+        DataTable sqlDt = new DataTable();
+        MySqlDataAdapter DtA = new MySqlDataAdapter();
+        MySqlDataReader sqlRd;
+        string sqlQuery;
+
+        DataSet DS = new DataSet();
+
+        string server = "localhost";
+        string username = "root";
+        string password = "yourpassword";
+        string database = "yourdatabase";
+
+        string saatstr = DateTime.Now.ToLongTimeString();
+        string tarihstr = DateTime.Now.ToLongDateString();
+
+        public void uploadData()
+        {
+            sqlConn.ConnectionString = "server=" + server + ";" + "user id=" + username + ";" + "password=" + password + ";" + "database=" + database;
+
+            sqlConn.Open();
+            sqlcomm.Connection = sqlConn;
+            sqlcomm.CommandText = "SELECT * FROM mycomdb.mycomtb;";
+
+            sqlRd = sqlcomm.ExecuteReader();
+            sqlDt.Load(sqlRd);
+            sqlRd.Close();
+            sqlConn.Close();
+        }
+
+        public void addData()
+        {
+            try
+            {
+                sqlConn.ConnectionString = "server=" + server + ";" + "user id=" + username + ";" + "password=" + password + ";" + "database=" + database;
+
+                sqlConn.Open();
+                sqlQuery = "insert into mycomdb.mycomtb (Saat, Tarih)" + "values('" + saatstr + "' , '" + tarihstr + "')";
+
+                sqlcomm = new MySqlCommand(sqlQuery, sqlConn);
+                sqlRd = sqlcomm.ExecuteReader();
+                sqlConn.Close();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            finally
+            {
+                sqlConn.Close();
+            }
+            uploadData();
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - this.Width;
+            this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+
+            addData();
+        }
+
+        private void bunifuThinButton22_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void bunifuThinButton21_Click(object sender, EventArgs e)
+        {
+            Form1 form2 = new Form1();  
+            form2.Show();
+            this.Hide();
+        }
+    }
+}
