@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data;
 using MySql.Data.MySqlClient;
-using Microsoft.Win32;
-
 
 namespace Com_Takip
 {
@@ -56,8 +54,6 @@ namespace Com_Takip
 
         private void Form1_Load(object sender, EventArgs e)
         {
-        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-        key.SetValue("Com_Takip", "\"" + Application.ExecutablePath + "\"");
             uploadData();
         }
 
