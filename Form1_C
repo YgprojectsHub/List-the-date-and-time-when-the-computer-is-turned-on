@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using Microsoft.Win32;
+
+
+namespace Com_Takip
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+
+        }
+
+        MySqlConnection sqlConn = new MySqlConnection();
+        MySqlCommand sqlcomm = new MySqlCommand();
+        DataTable sqlDt = new DataTable();
+        MySqlDataAdapter DtA = new MySqlDataAdapter();
+        MySqlDataReader sqlRd;
+        string sqlQuery;
+
+        DataSet DS = new DataSet();
+
+        string server = "localhost";
+        string username = "root";
+        string password = "yourpassword";
+        string database = "yourdatabase";
+
+        string saatstr = DateTime.Now.ToLongTimeString();
+        string tarihstr = DateTime.Now.ToLongDateString();
+
+        public void uploadData()
+        {
+            sqlConn.ConnectionString = "server=" + server + ";" + "user id=" + username + ";" + "password=" + password + ";" + "database=" + database;
+
+            sqlConn.Open();
+            sqlcomm.Connection = sqlConn;
+            sqlcomm.CommandText = "SELECT * FROM mycomdb.mycomtb;";
+
+            sqlRd = sqlcomm.ExecuteReader();
+            sqlDt.Load(sqlRd);
+            sqlRd.Close();
+            sqlConn.Close();
+            dataGridView1.DataSource = sqlDt;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+        key.SetValue("Com_Takip", "\"" + Application.ExecutablePath + "\"");
+            uploadData();
+        }
+
+        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            this.dataGridView1.Rows[e.RowIndex].Cells["ıdclmn"].Value = (e.RowIndex + 1).ToString();
+        }
+
+        private void bunifuThinButton22_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+    }
+}
